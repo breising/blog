@@ -1,0 +1,48 @@
+<!--   template  -->
+<!DOCTYPE html>
+<hmtl>
+	<head>
+	<title>Blog</title>
+	</head>
+	<style>
+		a:visited {
+			color: blue;
+		}
+	</style>
+	<body>
+		<div class="contain-main">
+			<div class="focus-contain">
+				<div class="title">Delete post</div>
+				<br>
+				<form method="post">
+				<input type="submit" value="delete now" class="delete-post">
+				</form>
+				<div class="contain-body">
+				<div class="field"><a href="/edit/title?title={{title}}">+ Title:</a><br><input style="text-align: left" class="answer" readonly name="title" value="{{title}}"></div>
+				<div class="error">{{error}}</div>
+				<div class="field">Created:<br><span class="answer">  {{created}}</span></div>
+				<div class="field">Last mod:<br><span class="answer">  {{last_mod}}</span></div>
+				<div class="field">Author:<br><span class="answer">  {{author}}</span></div>
+				<div class="field"><a href="/edit/body?title={{title}}">+ Content</a>
+				<br><span class="answer">{{body}}</span></div>
+				<div class="error">{{error}}</div>
+			</div>
+			<br>
+						<br>
+			<div class="contain-body"><a href="/comment?title={{title}}">+ Comments:<a/>
+				<ul>
+				
+					{% for x in comments %}
+					<li>
+					<div class="comment1"><i>{{ x.author }}</i> commented on {{ x.created }}:</div>
+					<br>
+					<div class="comment2">{{ x.comment }}</div>
+					<br>
+					<br>
+					</li>
+					{% endfor %}
+					
+				</ul>
+			</div>
+		</body>
+	<link type="text/css" rel="stylesheet" href="/static/main.css"/>

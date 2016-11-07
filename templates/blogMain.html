@@ -1,0 +1,36 @@
+<!--   template  -->
+<!DOCTYPE html>
+<hmtl>
+
+    <head>
+        <title>Blog</title>
+    </head>
+    <style>
+    a:visited {
+        color: blue;
+    }
+    </style>
+    <body>
+        <div class="contain-main">
+            <div class="title">The Bike Blog </div>
+            <br>
+            <div class="answer">Welcome back: {{user_id}}</div>
+            <br>
+            <form method="post" action="/logout">
+                <input type=submit value="logout">
+            </form>
+            <br>
+            <div class="error">{{error}}</div>
+            <a href="/newpost" class="newPost">+ Add post</a>
+            <div class="list10-contain">
+                <ul>
+                    {% for x in posts %}
+                    <li><a href="/focus?title={{ x.title }}">
+						{{ x.title }}
+						</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </body>
+    <link type="text/css" rel="stylesheet" href="/static/main.css" />

@@ -1,0 +1,49 @@
+<!--   template  -->
+<!DOCTYPE html>
+<hmtl>
+	<head>
+	<title>Blog</title>
+	</head>
+	<body>
+		 <div class="main-contain">
+			 <div class="title">The Bike Blog
+			 </div>
+			 <div class="welcome">Logged in as: {{user_id}}</div>
+				<div class="success">{{error}}</div>
+			 <div class="login-contain">
+			 <form action="/signup">
+					 <input type="submit" name="signup" value="signup" class="signup">
+				 </form>
+			 	<form name="login" method="post">
+			 	<br>
+			 	<div style="color: red" class="error">{{error}}</div>
+			 	<br>
+			 	<legend>Username</legend>
+					 <input type="text" name="username" class="username">
+					 <br>
+					 <legend>Password</legend>
+					 <input type="text" name="password" class="password">
+					 <input type="submit" name="login" value="login" class="login">
+				 </form>
+				<a href="/newpost" class="newPost">Add new post</a>
+			 </div>
+			 
+			 <div class="list10-contain">
+			 	<ul>
+			 		<li><a href="/focus">author:{author name} summary: {ajsk ajksl alkjsd flj a sdljkf asdjlkf asdlf sdljkf fsljk}</a></li>
+			 		<li><a href="/focus">list item</a></li>
+			 		<li><a href="/focus">list item</a></li>
+			 		<li><a href="/focus">list item</a></li>
+			 		<li><a href="/focus">list item</a></li>
+			 		<li><a href="/focus">list item</a></li>
+			 		<li><a href="/focus">list item</a></li>
+			 		<li><a href="/focus">list item</a></li>
+			 		<li><a href="/focus">list item</a></li>
+			 		<li><a href="/focus">list item</a></li>
+			 		<li><a href="/focus">list item</a></li>
+			 		<li><a href="/focus">list item</a></li>
+			 	</ul>
+			 </div>
+		 </div>
+	</body>
+	<link type="text/css" rel="stylesheet" href="/static/main.css"/>

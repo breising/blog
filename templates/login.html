@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<hmtl>
+	<head>
+	<title>Blog</title>
+	</head>
+	<body>
+		 <div class="contain-main">
+			 <div class="title">The Bike Blog</div>
+			 <div class="login-contain">
+			 	<form name="login" method="post">
+				 	<br>
+				 	<div style="color: red" class="error">{{error}}</div>
+				 	<br>
+				 	<legend>Username</legend>
+					 <input type="text" name="username">
+					 <br>
+					 <br>
+					 <legend>Password</legend>
+					 <input type="password" name="password">
+					 <br>
+					 <br>
+					 <br>
+					 <input type="submit" name="login" value="login">
+				 </form>
+				 <form action="/signup">
+					 <br>
+					 <br>
+					 <input type="submit" name="sign-up" value="sign-up">
+				 </form>
+			 </div>
+		 </div>
+	 </body>
+	 <link type="text/css" rel="stylesheet" href="/static/main.css"/>
+ </hmtl>

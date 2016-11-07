@@ -1,0 +1,38 @@
+<!--   template  -->
+<!DOCTYPE html>
+<hmtl>
+	<head>
+	<title>Blog</title>
+	</head>
+	<body>
+		<div class="signup-contain">
+			<div class="title">Sign-up</div>
+			<br>
+			<br>
+			
+			<div class="login-contain">
+			<div class=error>{{error}}</div>
+		 	<form method="post">
+			 	<legend>Username</legend>
+				<input type="text" name="userName">
+				<br>
+				<br>
+				<legend>Password</legend>
+				<input type="password" name="password">
+				<br>
+				<br>
+				<legend>Verify password</legend>
+				<div style="color: red" class=error>{{error2}}</div>
+				<input type="password" name="passwordV">
+				<br>
+				<br>
+				<legend>Email</legend>
+				<input type="text" name="userEmail">
+				<br>
+				<br>
+				<input type="submit" value="Submit">
+			 </form>
+			 </div>
+		</div>
+	</body>
+	<link type="text/css" rel="stylesheet" href="/static/main.css"/>

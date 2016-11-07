@@ -1,0 +1,37 @@
+<!--   template  -->
+<!DOCTYPE html>
+<hmtl>
+	<head>
+	<title>Blog</title>
+	</head>
+	<body>
+	<!--   template  -->
+<!DOCTYPE html>
+<hmtl>
+	<head>
+	<title>Edit blog post</title>
+	</head>
+	<body>
+		<div class="contain-main">
+			<div class="title">Edit title</div>
+			<form class="edit-form" method="post">
+				<legend>Current</legend>
+				<input style="text-align: center" type="text" name="old" value="{{old}}"" readonly>
+				<br>
+				<br>
+				<legend>New</legend>
+				<input type="text" name="new">
+				<br><br>
+				<div style="color: red">{{error}}</div>
+				<input type="submit">
+			</form>
+			<form method="post" action="/focus?title={{old}}">
+				<input type="submit" value="Cancel">
+			</form>
+			
+		</div>
+		<br>
+		<br>
+	</body>
+	<link type="text/css" rel="stylesheet" href="/static/main.css">
+	</body>
