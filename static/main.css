@@ -60,13 +60,7 @@ a {
 	border-radius: 6px;
 }
 
-.like {
-	font-size: 18px;
-	width: 120px;
-	background: hsl(210,100%,50%);
-	color: white;
-	border: none;
-}
+
 
 .edit-title {
 	cursor: pointer;
@@ -82,14 +76,16 @@ a {
 	text-align: center;
 }
 .title {
-	font-size: 25px;
+	font-size: 20px;
 	text-align: center;
 	width: 95%;
 	margin: auto;
 }
+
 .delete-post {
 	color: black;
 }
+
 .list10-contain {
 	width: 200px;
 	margin-left: auto;
@@ -105,11 +101,17 @@ input .focus {
 
 .contain-menu {
 	font-size: 20px;
-	margin-left: 60px;
 	background: hsl(210,100%,50%);
-	border-radius: 3px;
-	width: 120px;
+	width: 110px;
 	padding-top: 3px;
+}
+
+.like {
+	font-size: 18px;
+	width: 110px;
+	background: hsl(210,100%,50%);
+	color: white;
+	border: none;
 }
 
 .contain-body {

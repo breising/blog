@@ -110,12 +110,9 @@ class Welcome(BlogHandler):
 			#GET ALL BLOG POSTS TO LIST THEM
 			posts = BlogEntry.all().order('-created')
 
-			# AUTHENTICATE check for valid cookie
-			user_id_cookie_hashed = self.request.cookies.get('user_id')
-			# user_id is equal to the userName string
-			user_id = auth(user_id_cookie_hashed)
+			# # AUTHENTICATE check for valid cookie
+			user_id = auth(self.request.cookies.get('user_id'))
 
-			# if authentication cookie fails
 			if not user_id:
 				error = "Please log in."
 				self.redirect("/login?error=%s" % error)
@@ -131,44 +128,27 @@ class Welcome(BlogHandler):
 						self.render("blogMain.html", user_id = user_id, posts = posts)	
 					else:
 						# if user is NOT in the db
-						error = "You're not in the database."
+						error = "Username not in the database."
 						self.redirect("/login?error=%s" % error)
 				# if user is NOT authenticated via a cookie
 				except:
-					error = "You must login first."
+					error = "Error accessing database."
 					self.redirect("/login?error=%s" % error)
 		except:
 			error = "Error accessing database."
 			self.redirect("/login?error=%s" % error)
 
-
-class LandPage(BlogHandler):
-	def get(self):
-		#get the cookie
-		user_id_cookie_hashed = self.request.cookies.get('user_id')
-		#if user is authenticated then go...
-		user_id = check_secure_val(user_id_cookie_hashed)
-
-		if user_id:
-			self.redirect("/welcome")
-	  	else:
-	  		self.redirect("/login")
-
 class EditTitle(BlogHandler):
 	def get(self):
 		user_id = None
-		#AUTHENTICATE
-		user_id_cookie_hashed = self.request.cookies.get('user_id')
-		#if user is authenticated then go...
-		user_id = check_secure_val(user_id_cookie_hashed)
+		# AUTHENTICATE check for valid cookie
+		user_id = auth(self.request.cookies.get('user_id'))
 		
 		title = self.request.get("title")
 
 		if user_id:
-
 			try:
 				q = BlogEntry.all().filter('title =', title).get()
-
 				body = q.body
 				created = q.created
 				last_mod = q.last_mod
@@ -177,16 +157,12 @@ class EditTitle(BlogHandler):
 				k = q.key()
 				comments = Comments.all().ancestor(k)
 
-				if user_id:
-					if author == user_id:
-						old = title
-						self.render("edit-title.html", old=old, title=title)
-					else:
-						error = "You are not the author. Only the author can edit."
-						self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, error=error)
-			  	else:
-			  		self.redirect("/login")
-
+				if author == user_id:
+					old = title
+					self.render("edit-title.html", old=old, title=title)
+				else:
+					error = "You must be author to edit."
+					self.redirect("/focus?title=%s&error=%s" % (title,error))
 			except:
 				error = "Could not access the database."
 				self.redirect("/focus?title=%s&error=%s" % (title,error))
@@ -200,8 +176,9 @@ class EditTitle(BlogHandler):
 			new = self.request.get("new")
 		  	old = self.request.get("old")
 
+		  	# if field is left empty
 		  	if new == "":
-		  		error = "You must enter a new title. Copy the current title if you want no changes."
+		  		error = "You must enter a new title."
 		  		self.render("edit-title.html", error=error, old=old)
 		  		return
 		  	if new:
@@ -209,6 +186,7 @@ class EditTitle(BlogHandler):
 				q.title = new
 			 	q.put()
 
+			 	# create a delay to give db chance to update
 			  	def go():
 			  		return
 
@@ -221,34 +199,28 @@ class EditTitle(BlogHandler):
 			self.redirect("/focus?title=%s&error=%s" % (title,error))
 		  
 class EditBody(BlogHandler):
-
 	def get(self):
 		user_id = None
-		#AUTHENTICATE
-		user_id_cookie_hashed = self.request.cookies.get('user_id')
-		#if user is authenticated then go...
-		user_id = check_secure_val(user_id_cookie_hashed)
+		# AUTHENTICATE check for valid cookie
+		user_id = auth(self.request.cookies.get('user_id'))
+
 		title = self.request.get("title")
 
 		if user_id:
 			try:
+				# query db filtered by title to get body and author
 				q = BlogEntry.all().filter('title =', title).get()
-
-				body = q.body
-				created = q.created
-				last_mod = q.last_mod
+				# old is the original text before changes
+				old = q.body
 				author = q.author
-
-				k = q.key()
-				comments = Comments.all().ancestor(k)
 
 				if user_id:
 					if author == user_id:
-						old = q.body
+						
 						self.render("edit-body.html", old = old, title = title)
 					else:
 						error = "You are not the author. Only the author can edit."
-						self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, error=error)
+						self.redirect("/focus?title=%s&error=%s" % (title,error))
 			  	else:
 			  		self.redirect("/login")
 			except:
@@ -267,12 +239,13 @@ class EditBody(BlogHandler):
 		  	if body == "":
 		  		error = "You must enter a new body. Copy the current body if you want no changes."
 		  		self.render("edit-body.html", error=error, title=title, old = old)
-		  		return
+		 		return
 		  	if body:
 			  	q = gBlogEntry.all().filter('title =', title).get()
 				q.body = body
 			 	q.put()
 
+			 	# create delay to allow db to update
 			  	def go():
 			  		return
 
@@ -287,17 +260,12 @@ class EditBody(BlogHandler):
 class DeletePost(BlogHandler):
 	def get(self):
 		user_id = None
-		#AUTHENTICATE
-		user_id_cookie_hashed = self.request.cookies.get('user_id')
-		#if user is authenticated then go...
-		user_id = check_secure_val(user_id_cookie_hashed)
+		# AUTHENTICATE check for valid cookie
+		user_id = auth(self.request.cookies.get('user_id'))
 		
 		title = self.request.get("title")
 
 		if user_id:
-			# ONLY AUTHOR CAN EDIT: check that user_id matches the AUTHOR
-			# first get the author name
-			
 			q = BlogEntry.all().filter('title =', title).get()
 
 			body = q.body
@@ -305,15 +273,13 @@ class DeletePost(BlogHandler):
 			last_mod = q.last_mod
 			author = q.author
 
-			k = q.key()
-			comments = Comments.all().ancestor(k)
-
+			# ONLY AUTHOR CAN EDIT: check that user_id matches the AUTHOR
 			if user_id:
 				if author == user_id:
-					self.render("delete.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments)
+					self.render("delete.html", title=title, body=body, created = created, last_mod = last_mod, author = author)
 				else:
 					error = "You are not the author of this post. Only the author can delete."
-					self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, error=error)
+					self.redirect("/focus?title=%s&error=%s" % (title,error))
 		  	else:
 		  		self.redirect("/login")
 		else:
@@ -328,6 +294,7 @@ class DeletePost(BlogHandler):
 			q = BlogEntry.all().filter('title =', title).get()
 			q.delete()
 
+			# create delay for db to update
 			def go():
 		  		#self.redirect("/welcome")
 		  		return
@@ -341,7 +308,6 @@ class DeletePost(BlogHandler):
 
 class Focus(BlogHandler):
 	def get(self):
-
 		title = self.request.get("title")
 		error = self.request.get("error")
 
@@ -359,25 +325,20 @@ class Focus(BlogHandler):
 		#count likes in the database for display, all relevant likes are ancestors of the blog post with title
 		likes = Likes.all().ancestor(k)
 		count = 0
-		n = 0
 		for like in likes:
-			n += 1
-		count = n
+			count += 1
 
 		# self.redirect("/edit/title")
 		self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, error=error,count=count)
 
 	def post(self):
-
 		def render_focus(title, body, created, last_mod, author, comments, count, error):
 			self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, count = count, error=error)
 
 		title = self.request.get("title")
 		user_id = None
-		#AUTHENTICATE
-		user_id_cookie_hashed = self.request.cookies.get('user_id')
-		#if user is authenticated then go...
-		user_id = check_secure_val(user_id_cookie_hashed)
+		# AUTHENTICATE check for valid cookie
+		user_id = auth(self.request.cookies.get('user_id'))
 
 		if user_id:
 			# has the user already liked this post ?
@@ -402,16 +363,13 @@ class Focus(BlogHandler):
 			# filter by ancestor bc ALL likes are recorded as an ancestor of ONE blogPost
 			count = 0
 			likes = Likes.all().ancestor(k)
-			n = 0
 			for like in likes:
-				n += 1
-			count = n
+				count += 1
 			
 			# check if user has already liked this post
 			# all Likes have a user_key property which corresponds to the User who LIKED the post, so query Likes filtered by user_key
 			z = Likes.all().filter("user_key =", user_key)
 			# if you get a result it means User already liked this post
-
 			alreadyLiked = z.ancestor(k).get()
 			# set flag default 
 			flag = "go"
@@ -484,12 +442,19 @@ class Login(BlogHandler):
 						# set the cookie
 						self.response.headers.add_header('Set-Cookie', 'user_id=%s' % userNameHash_cookie_val)
 						# with the new cookie set, /welcome will do the auto login
-						self.redirect("/welcome")
+
+						def go():
+			  				return
+
+						t = Timer(1, go)
+			  			t.start()
+			  			self.redirect("/welcome")
+						
 					else:
-						error = "Login failed. You are not a registered user. Please sign up first."
+						error = "Login failed. Password is incorrect."
 						self.render("login.html", error=error)
 			else:
-				error = "Login failed. Could not access the database."
+				error = "Login failed. Username is incorrect."
 				self.render("login.html", error=error)
 		except:
 			error = "Sorry. Could not access the database."
@@ -557,14 +522,12 @@ class NewPost(BlogHandler):
 			like = 0
 
 			#AUTHENTICATE
-			user_id_cookie_hashed = self.request.cookies.get('user_id')
-			#if user is authenticated then go...
-			user_id = check_secure_val(user_id_cookie_hashed)
-			
-
+			user_id = None
+			# AUTHENTICATE check for valid cookie
+			user_id = auth(self.request.cookies.get('user_id'))
+				
 			if user_id:
 				if title and body:
-
 					u = Users.all().filter("userName =", user_id).get()
 
 					user_key = u.key().id()
@@ -600,10 +563,8 @@ class NewPost(BlogHandler):
 class Comment(BlogHandler):
 	def get(self):
 		user_id = None
-		#AUTHENTICATE
-		user_id_cookie_hashed = self.request.cookies.get('user_id')
-		#if user is authenticated then go...
-		user_id = check_secure_val(user_id_cookie_hashed)
+		# AUTHENTICATE check for valid cookie
+		user_id = auth(self.request.cookies.get('user_id'))
 
 		title = self.request.get("title")
 
@@ -632,9 +593,9 @@ class Comment(BlogHandler):
 			q = BlogEntry.all().filter('title =', title).get()
 
 			#AUTHENTICATE
-			user_id_cookie_hashed = self.request.cookies.get('user_id')
-			#if user is authenticated then go...
-			user_id = check_secure_val(user_id_cookie_hashed)
+			user_id = None
+			# AUTHENTICATE check for valid cookie
+			user_id = auth(self.request.cookies.get('user_id'))
 
 			if user_id:
 				if comment:
@@ -658,10 +619,8 @@ class EditComment(BlogHandler):
 		title = self.request.get("title")
 
 		user_id = None
-		#AUTHENTICATE
-		user_id_cookie_hashed = self.request.cookies.get('user_id')
-		#if user is authenticated then go...
-		user_id = check_secure_val(user_id_cookie_hashed)
+		# AUTHENTICATE check for valid cookie
+		user_id = auth(self.request.cookies.get('user_id'))
 		
 		if user_id:
 			c = Comments.get(commentId)
@@ -700,6 +659,17 @@ class Logout(BlogHandler):
 		self.response.headers.add_header("Set-Cookie", "user_id=deleted; Expires=Thu, 01-Jan-1970 00:00:00 GMT")
 		error = "You are now logged out."
 		self.redirect("/welcome")
+		
+class LandPage(BlogHandler):
+	def get(self):
+		user_id = None
+		# AUTHENTICATE check for valid cookie
+		user_id = auth(self.request.cookies.get('user_id'))
+
+		if user_id:
+			self.redirect("/welcome")
+		else:
+			self.redirect("/login")
 
 app = webapp2.WSGIApplication([('/', LandPage),
 								('/welcome', Welcome),

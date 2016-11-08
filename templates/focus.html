@@ -7,11 +7,14 @@
     </head>
     <body>
         <div class="contain-main">
-            <div class="title">View post</div>
+            <div class="title">Title: {{title}}</div>
             <div class="error">{{error}}</div>
             <div class="contain-delete">
+            	<div class="contain-menu">
+                    <a class="delete" href="/welcome">Main list</a>
+                </div>
                 <form method="post" action="/focus?title={{title}}">
-                    <input class="like" type="submit" name="like" value="Likes  {{count}}">
+                    <input style="border-radius: 0px" class="like" type="submit" name="like" value="Likes  {{count}}">
                 </form>
                 <div class="contain-menu">
                     <a class="delete" href="/delete?title={{title}}">Delete</a>
