@@ -509,20 +509,30 @@ class Signup(BlogHandler):
 			# if all the fields are completed
 			if userName and password and passwordV and userEmail:
 				# if passwords do NOT match
-				if password != passwordV:
-					error2="Passwords must match."
-					self.render("sign-up.html", error2=error2)
-				# passwords DO match
-				else:
-					# look up the user name to verify it's not already in the db first.
-					# make the password hash with bcrypt
-					userPasswordHash = make_bcrypt_hash(password)
-
-					# record username and password hashes in the db
-					s = Users(userName=userName,userPasswordHash=userPasswordHash,userEmail=userEmail)
-					s.put()
+				if password == passwordV:
 					
-					self.redirect("/welcome")
+
+					q = Users.all().filter("userName =", userName).get()
+					# if not q means the userName IS allowed
+					if not q:
+						# look up the user name to verify it's not already in the db first.
+						# make the password hash with bcrypt
+						userPasswordHash = make_bcrypt_hash(password)
+
+						# record username and password hashes in the db
+						s = Users(userName=userName,userPasswordHash=userPasswordHash,userEmail=userEmail)
+						s.put()
+						
+						self.redirect("/welcome")
+					# if q yes, means that userName is NOT unique so,
+					else:
+						error = "Please choose a different username."
+						self.render("sign-up.html", error=error)
+				# passwords DO NOT match
+				else:
+					error2="Passwords must match."
+					self.render("sign-up.html", error=error)
+					
 			# if any field is not completed
 			else:
 				error = "Please complete all the fields"
