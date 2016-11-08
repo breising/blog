@@ -156,6 +156,7 @@ class LandPage(BlogHandler):
 
 class EditTitle(BlogHandler):
 	def get(self):
+		user_id = None
 		#AUTHENTICATE
 		user_id_cookie_hashed = self.request.cookies.get('user_id')
 		#if user is authenticated then go...
@@ -163,35 +164,35 @@ class EditTitle(BlogHandler):
 		
 		title = self.request.get("title")
 
-		try:
-			q = BlogEntry.all().filter('title =', title).get()
+		if user_id:
 
-			body = q.body
-			created = q.created
-			last_mod = q.last_mod
-			author = q.author
+			try:
+				q = BlogEntry.all().filter('title =', title).get()
 
-			k = q.key()
-			comments = Comments.all().ancestor(k)
+				body = q.body
+				created = q.created
+				last_mod = q.last_mod
+				author = q.author
 
-			if user_id:
-				if author == user_id:
-					old = title
-					self.render("edit-title.html", old=old)
-				else:
-					error = "You are not the author. Only the author can edit."
-					self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, error=error)
-		  	else:
-		  		self.redirect("/login")
+				k = q.key()
+				comments = Comments.all().ancestor(k)
 
-		except:
-			error = "Could not access the database."
+				if user_id:
+					if author == user_id:
+						old = title
+						self.render("edit-title.html", old=old, title=title)
+					else:
+						error = "You are not the author. Only the author can edit."
+						self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, error=error)
+			  	else:
+			  		self.redirect("/login")
+
+			except:
+				error = "Could not access the database."
+				self.redirect("/focus?title=%s&error=%s" % (title,error))
+		else:
+			error = "Please signup and login to edit posts."
 			self.redirect("/focus?title=%s&error=%s" % (title,error))
-
-		
-
-		# ONLY AUTHOR CAN EDIT: check that user_id matches the AUTHOR
-		# first get the author name
 		
 
 	def post(self):
@@ -222,35 +223,39 @@ class EditTitle(BlogHandler):
 class EditBody(BlogHandler):
 
 	def get(self):
+		user_id = None
 		#AUTHENTICATE
 		user_id_cookie_hashed = self.request.cookies.get('user_id')
 		#if user is authenticated then go...
 		user_id = check_secure_val(user_id_cookie_hashed)
-
 		title = self.request.get("title")
 
-		try:
-			q = BlogEntry.all().filter('title =', title).get()
+		if user_id:
+			try:
+				q = BlogEntry.all().filter('title =', title).get()
 
-			body = q.body
-			created = q.created
-			last_mod = q.last_mod
-			author = q.author
+				body = q.body
+				created = q.created
+				last_mod = q.last_mod
+				author = q.author
 
-			k = q.key()
-			comments = Comments.all().ancestor(k)
+				k = q.key()
+				comments = Comments.all().ancestor(k)
 
-			if user_id:
-				if author == user_id:
-					old = q.body
-					self.render("edit-body.html", old = old, title = title)
-				else:
-					error = "You are not the author. Only the author can edit."
-					self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, error=error)
-		  	else:
-		  		self.redirect("/login")
-		except:
-		  	error = "Could not access the database."
+				if user_id:
+					if author == user_id:
+						old = q.body
+						self.render("edit-body.html", old = old, title = title)
+					else:
+						error = "You are not the author. Only the author can edit."
+						self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, error=error)
+			  	else:
+			  		self.redirect("/login")
+			except:
+			  	error = "Could not access the database."
+				self.redirect("/focus?title=%s&error=%s" % (title,error))
+		else:
+			error = "Please signup and login to edit posts."
 			self.redirect("/focus?title=%s&error=%s" % (title,error))
 
 	def post(self):
@@ -281,15 +286,19 @@ class EditBody(BlogHandler):
 
 class DeletePost(BlogHandler):
 	def get(self):
-		try:
-			#AUTHENTICATE
-			user_id_cookie_hashed = self.request.cookies.get('user_id')
-			#if user is authenticated then go...
-			user_id = check_secure_val(user_id_cookie_hashed)
+		user_id = None
+		#AUTHENTICATE
+		user_id_cookie_hashed = self.request.cookies.get('user_id')
+		#if user is authenticated then go...
+		user_id = check_secure_val(user_id_cookie_hashed)
+		
+		title = self.request.get("title")
+
+		if user_id:
 			# ONLY AUTHOR CAN EDIT: check that user_id matches the AUTHOR
 			# first get the author name
-			title = self.request.get("title")
-			q = xBlogEntry.all().filter('title =', title).get()
+			
+			q = BlogEntry.all().filter('title =', title).get()
 
 			body = q.body
 			created = q.created
@@ -307,9 +316,10 @@ class DeletePost(BlogHandler):
 					self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, error=error)
 		  	else:
 		  		self.redirect("/login")
-		except:
-			error = "Could not access database to delete this post. Please try again later :("
+		else:
+			error = "Please signup and login to edit posts."
 			self.redirect("/focus?title=%s&error=%s" %(title,error))
+
 
 	def post(self):
 		try:
@@ -331,127 +341,127 @@ class DeletePost(BlogHandler):
 
 class Focus(BlogHandler):
 	def get(self):
-		try:
-			title = self.request.get("title")
-			error = self.request.get("error")
 
-			#querie BlogEntry for the blog entity filtered by title
-			q = BlogEntry.all().filter("title =", title).get()
+		title = self.request.get("title")
+		error = self.request.get("error")
 
+		#querie BlogEntry for the blog entity filtered by title
+		q = BlogEntry.all().filter("title =", title).get()
+
+		body = q.body
+		created = q.created
+		last_mod = q.last_mod
+		author = q.author
+
+		k = q.key()
+		comments = Comments.all().ancestor(k)
+
+		#count likes in the database for display, all relevant likes are ancestors of the blog post with title
+		likes = Likes.all().ancestor(k)
+		count = 0
+		n = 0
+		for like in likes:
+			n += 1
+		count = n
+
+		# self.redirect("/edit/title")
+		self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, error=error,count=count)
+
+	def post(self):
+
+		def render_focus(title, body, created, last_mod, author, comments, count, error):
+			self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, count = count, error=error)
+
+		title = self.request.get("title")
+		user_id = None
+		#AUTHENTICATE
+		user_id_cookie_hashed = self.request.cookies.get('user_id')
+		#if user is authenticated then go...
+		user_id = check_secure_val(user_id_cookie_hashed)
+
+		if user_id:
+			# has the user already liked this post ?
+			# first, query Users filtered by user_id 
+			u = Users.all().filter("userName =", user_id).get()
+
+			# then get the key().id() and coerce a string
+			user_key = u.key().id()
+			user_key = str(user_key)
+
+			# query for the usual blogPost entity properties
+			q = BlogEntry.all().filter('title =', title).get()
 			body = q.body
 			created = q.created
 			last_mod = q.last_mod
 			author = q.author
 
+			# k is the key to the blog post.
 			k = q.key()
-			comments = Comments.all().ancestor(k)
 
-			#count likes in the database for display, all relevant likes are ancestors of the blog post with title
+			# count ALL the existing LIKES for display on VIEW post
+			# filter by ancestor bc ALL likes are recorded as an ancestor of ONE blogPost
+			count = 0
 			likes = Likes.all().ancestor(k)
 			n = 0
 			for like in likes:
 				n += 1
-			likes = n
+			count = n
+			
+			# check if user has already liked this post
+			# all Likes have a user_key property which corresponds to the User who LIKED the post, so query Likes filtered by user_key
+			z = Likes.all().filter("user_key =", user_key)
+			# if you get a result it means User already liked this post
 
-			# self.redirect("/edit/title")
-			self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, error=error,likes=n)
-		except:
-			error = "Error accessing the database."
-			self.redirect("/focus?title=%s&error=%s" %(title,error))
+			alreadyLiked = z.ancestor(k).get()
+			# set flag default 
+			flag = "go"
+			# if there are ZERO likes in the db, you'll get an error bc the query gets nothing. To prevent the error, use try/except
+			try:
+				if alreadyLiked.user_key == user_key:
+					flag = "nogo"
+			except:
+				pass
 
-	def post(self):
+			# get all comments for for the blogpost - that means get all comments who are ancestors of K (the blogpost).
+			comments = Comments.all().ancestor(k)
 
-		def render_focus(title, body, created, last_mod, author, comments, likes, error):
-			self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, likes = likes, error=error)
-		try:
-			title = self.request.get("title")
-			#AUTHENTICATE
-			user_id_cookie_hashed = self.request.cookies.get('user_id')
-			#if user is authenticated then go...
-			user_id = check_secure_val(user_id_cookie_hashed)
-			if user_id:
-				# has the user already liked this post ?
-				# first, query Users filtered by user_id 
-				u = Users.all().filter("userName =", user_id).get()
-
-				# then get the key().id() and coerce a string
-				user_key = u.key().id()
-				user_key = str(user_key)
-
-				# query for the usual blogPost entity properties
-				q = BlogEntry.all().filter('title =', title).get()
-				body = q.body
-				created = q.created
-				last_mod = q.last_mod
-				author = q.author
-
-				# k is the key to the blog post.
-				k = q.key()
-
-				# count ALL the existing LIKES for display on VIEW post
-				# filter by ancestor bc ALL likes are recorded as an ancestor of ONE blogPost
-				likes = Likes.all().ancestor(k)
-				n = 0
-				for like in likes:
-					n += 1
-				likes = n
-				
-				# check if user has already liked this post
-				# all Likes have a user_key property which corresponds to the User who LIKED the post, so query Likes filtered by user_key
-				z = Likes.all().filter("user_key =", user_key)
-				# if you get a result it means User already liked this post
-
-				alreadyLiked = z.ancestor(k).get()
-				# set flag default 
-				flag = "go"
-				# if there are ZERO likes in the db, you'll get an error bc the query gets nothing. To prevent the error, use try/except
-				try:
-					if alreadyLiked.user_key == user_key:
-						flag = "nogo"
-				except:
-					pass
-
-				# get all comments for for the blogpost - that means get all comments who are ancestors of K (the blogpost).
-				comments = Comments.all().ancestor(k)
-
-				# If the logged in user is the author then...
-				if user_id == q.author:
+			# If the logged in user is the author then...
+			if user_id == q.author:
+				#repaint page
+				error = "You are the author. You can't like your own posts."
+				render_focus(title, body, created, last_mod, author, comments, count, error)
+			else:
+				# if the logged in user has already liked this post then...
+				if flag == "nogo":
+					error = "You already liked this post."
 					#repaint page
-					error = "You are the author. You can't like your own posts."
-					render_focus(title, body, created, last_mod, author, comments, likes, error)
+					render_focus(title, body, created, last_mod, author, comments, count, error)
 				else:
-					# if the logged in user has already liked this post then...
-					if flag == "nogo":
-						error = "You already liked this post."
-						#repaint page
-						render_focus(title, body, created, last_mod, author, comments, likes, error)
-					else:
-						try:
-							# if tests are passed....record the LIKE; 
-							# record the userIDKEY in LIKES as a CHILD of the BLOGPOST
-							#increment the like so it updates the display (not the db)
-							likes = likes + 1
-							# record like in the db - user_key is the only property and it's ancestor is the blogpost k.
-							l = Likes(parent = k, user_key = user_key)
-							l.put()
-							error = "The Like was recorded."
-							#repaint page
-							render_focus(title, body, created, last_mod, author, comments, likes, error)
-						except:
-							error = "Error accessing the database."
-							self.redirect("/focus?title=%s&error=%s" %(title,error))
-		  	else:
-		  		# if you are not logged in, you must sign up and login.
-		  		self.redirect("/welcome")
-		except:
-			error = "Error accessing the database."
-			self.redirect("/focus?title=%s&error=%s" %(title,error))
+					# if tests are passed....record the LIKE; 
+					# record the userIDKEY in LIKES as a CHILD of the BLOGPOST
+					#increment the like so it updates the display (not the db)
+					count = count + 1
+					# record like in the db - user_key is the only property and it's ancestor is the blogpost k.
+					l = Likes(parent = k, user_key = user_key)
+					l.put()
+					error = "The Like was recorded."
+					#repaint page
+					render_focus(title, body, created, last_mod, author, comments, count, error)
+		else:
+			error = "Please signup and login to like a post."
+			# if you are not logged in, you must sign up and login.
+			self.redirect("/focus?title=%s&error=%s" % (title,error))
+
 
 class Login(BlogHandler):
 	def get(self):
+		#GET ALL BLOG POSTS TO LIST THEM
+		posts = BlogEntry.all().order('-created')
+
 		# get any error messages from get request
 		error = self.request.get("error")
-		self.render("login.html",error=error)
+
+		self.render("login.html",error=error,posts=posts)
 
 	def post(self):
 		try:
@@ -504,10 +514,6 @@ class Signup(BlogHandler):
 					self.render("sign-up.html", error2=error2)
 				# passwords DO match
 				else:
-					# # make cookie for new user
-					# userNameHash_cookie_val = str(make_secure_val(u.userName))
-					# # set the cookie
-					# self.response.headers.add_header('Set-Cookie', 'user_id=%s' % userNameHash_cookie_val)
 					# look up the user name to verify it's not already in the db first.
 					# make the password hash with bcrypt
 					userPasswordHash = make_bcrypt_hash(password)
@@ -583,19 +589,33 @@ class NewPost(BlogHandler):
 
 class Comment(BlogHandler):
 	def get(self):
-		try:
-			title = self.request.get("title")
-			q = BlogEntry.all().filter('title =', title).get()
+		user_id = None
+		#AUTHENTICATE
+		user_id_cookie_hashed = self.request.cookies.get('user_id')
+		#if user is authenticated then go...
+		user_id = check_secure_val(user_id_cookie_hashed)
 
-			body = q.body
+		title = self.request.get("title")
 
-			self.render("comment.html", title = title, body = body)
-		except:
-			error = "Could not access database."
-			self.render("comment.html", title = title, body = body)
+		if user_id:
+			try:
+				title = self.request.get("title")
+				q = BlogEntry.all().filter('title =', title).get()
+
+				body = q.body
+
+				self.render("comment.html", title = title, body = body)
+			except:
+				error = "Could not access database."
+				self.render("comment.html", title = title, body = body)
+		else:
+			error = "Please signup and login to edit comments."
+			# if you are not logged in, you must sign up and login.
+			self.redirect("/focus?title=%s&error=%s" % (title,error))
 
 	def post(self):
 		try:
+			comment = None
 			title = self.request.get("title")
 			comment = self.request.get("comment")
 			
@@ -610,16 +630,60 @@ class Comment(BlogHandler):
 				if comment:
 					c = Comments(parent = q, comment=comment, author=user_id)
 					c.put()
-					self.redirect("/welcome")
+					self.redirect("/focus?title=%s" % title)
 				else:
 					error = "Please add a comment."
 					# must include all the parameters below to preserve user entered data
 					self.render("comment.html", title=title, body=body, error=error)
 		  	else:
-		  		self.redirect("/login")
+		  		error = "Please signup and login to edit comments"
+		  		self.redirect("/focus?title=%s" % (title,error))
 		except:
 			error = "Could not access the database."
 			self.render("comment.html", title=title, body=body, error=error)
+class EditComment(BlogHandler):
+	def get(self):
+		commentId = None
+		commentId = self.request.get("commentId")
+		title = self.request.get("title")
+
+		user_id = None
+		#AUTHENTICATE
+		user_id_cookie_hashed = self.request.cookies.get('user_id')
+		#if user is authenticated then go...
+		user_id = check_secure_val(user_id_cookie_hashed)
+		
+		if user_id:
+			c = Comments.get(commentId)
+			author = c.author
+			
+			if user_id == author:
+
+			  		c = Comments.get(commentId)
+					author = c.author
+					comment = c.comment
+					created = c.created
+
+			  		self.render("edit-comment.html", author=author, comment=comment, created=created, commentId=commentId, title=title)
+			else:
+				error = "You must be the author to edit the comment."
+			  	self.redirect("/focus?title=%s&error=%s" % (title, error))
+		else:
+				error = "You must be loggen in to edit the comment."
+			  	self.redirect("/focus?title=%s&error=%s" % (title, error))
+
+	def post(self):
+		comment = self.request.get("comment")
+		title = self.request.get("title")
+		commentId = self.request.get("commentId")
+
+		q = Comments.get(commentId)
+
+		q.comment = comment
+		q.put()
+
+		error = ""
+		self.redirect("/focus?title=%s&error=%s" % (title, error))
 
 class Logout(BlogHandler):
 	def post(self):
@@ -638,5 +702,6 @@ app = webapp2.WSGIApplication([('/', LandPage),
 								('/edit/title', EditTitle),
 								('/edit/body', EditBody),
 								('/logout', Logout),
+								('/edit/comment', EditComment)
                                ],
                               debug=True)

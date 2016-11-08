@@ -1,31 +1,38 @@
 <!--   template  -->
 <!DOCTYPE html>
 <hmtl>
-	<head>
-	<title>Blog</title>
-	</head>
-	<style>
-		a:visited {
-			color: blue;
-		}
-	</style>
-	<body>
-	 	<div class="contain-main">
-			<div class="title">Add blog post</div>
-			<br>
-			<br>
-			<div class="login-contain">
-			<div class="error">{{error}}</div>
-			 	<form method="post">
-				 	<br>
-				 	<legend>Title/summary</legend>
-					<input type="text" name="title" value="{{title}}"" class="input1">
+
+    <head>
+        <title>Blog</title>
+    </head>
+    <style>
+    a:visited {
+        color: blue;
+    }
+    </style>
+
+    <body>
+        <div class="contain-main">
+            <div class="title">Add blog post</div>
+            <br>
+            <br>
+            <div class="login-contain">
+                <div class="error">{{error}}</div>
+                <form method="post">
+                    <br>
+                    <legend>Title/summary</legend>
+                    <input type="text" name="title" value="{{title}}" " class="input1 ">
 					<br>
 					<br>
 					<legend>Body</legend>
 					<textarea type="text" name="body" class="textarea1">{{body}}</textarea>
 					<br>
-					<input type="submit" class="AddBlogButton">
+					<input type="submit" value="submit" class="AddBlogButton">
 				</form>
+				<br>
+				<div class="cancel">
+				<a style="color: white; text-decoration: none" href="/welcome">Cancel</a>
+			</div>
+			</div>
 	</body>
 	<link type="text/css" rel="stylesheet" href="/static/main.css"/>

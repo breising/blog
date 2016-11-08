@@ -11,7 +11,7 @@
             <div class="error">{{error}}</div>
             <div class="contain-delete">
                 <form method="post" action="/focus?title={{title}}">
-                    <input class="like" type="submit" name="like" value="Likes  {{likes}}">
+                    <input class="like" type="submit" name="like" value="Likes  {{count}}">
                 </form>
                 <div class="contain-menu">
                     <a class="delete" href="/delete?title={{title}}">Delete</a>
@@ -40,6 +40,7 @@
 					<li>
 					<div class="comment1"><i>{{ x.author }}</i> commented on {{ x.created }}:</div>
 					<br>
+					<a href="/edit/comment?commentId={{ x.key() }}&title={{title}}" class="edit-comment">edit</a>
 					<div class="comment2">{{ x.comment }}</div>
 					<br>
 					<br>

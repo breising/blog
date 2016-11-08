@@ -13,18 +13,20 @@
 	</head>
 	<body>
 		<div class="contain-main">
-			<div class="title">Edit body</div>
+			<div class="title">Edit comment</div>
 			<form class="edit-form" method="post">
+				<input readonly style="color: white; background: white" name="commentId" value="{{commentId}}">
 				<legend>Current</legend>
-				<input style="text-align: center; color: black" class="textarea1" type="textarea" name="old" value="{{old}}"" readonly>
+				<input style="text-align: center; color: black" class="textarea1" type="textarea" name="old" value="{{comment}}"" readonly>
 				<br>
 				<br>
 				<legend>New</legend>
-				<input type="text" class="textarea1" name="body">
+				<input type="textarea" class="textarea1" name="comment">
 				<br><br>
 				<div style="color: red">{{error}}</div>
-				<input type="submit">
+				<input type="submit" value="submit">
 			</form>
+			<br>
 			<div class="cancel">
 				<a style="color: white; text-decoration: none" href="/focus?title={{title}}">Cancel</a>
 			</div>
