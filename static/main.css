@@ -7,9 +7,9 @@ input {
 	border-radius: 5px;
 	border-style: solid;
 	border-color: white;
-	width: 230px;
+	width: 300px;
 	height: 30px;
-	font-size: 18px;
+	font-size: 16px;
 	background: hsl(210,100%,50%);
 	color: white;
 	text-align: center;
@@ -19,7 +19,7 @@ textarea {
 	border-radius: 5px;
 	border-style: solid;
 	border-color: white;
-	width: 210px;
+	width: 300px;
 	height: 100px;
 	font-size: 18px;
 	background: hsl(210,100%,50%);
@@ -35,8 +35,8 @@ a {
 	border-radius: 6px;
 	border-style: solid;
 	border-color: white;
-	width: 230px;
-	height: 30px;
+	width: 300px;
+	height: 25px;
 	font-size: 18px;
 	background: hsl(210,100%,50%);
 	color: white;
@@ -74,6 +74,7 @@ a {
 	margin: auto;
 	margin-top: 40px;
 	text-align: center;
+	font-size: 16px;
 }
 .title {
 	font-size: 20px;
@@ -102,7 +103,7 @@ input .focus {
 .contain-menu {
 	font-size: 20px;
 	background: hsl(210,100%,50%);
-	width: 110px;
+	width: 80px;
 	padding-top: 3px;
 }
 
@@ -157,10 +158,6 @@ input .answer {
 .input1 {
 	width: 230px;
 }
-.textarea1 {
-	width: 230px;
-	height: 100px;
-}
 
 .welcome {
 	font-size: 16px;
@@ -207,7 +204,7 @@ li {
 
 .focus-contain {
 	padding-top: 50px;
-	width: 80%;
+	width: 100%;
 	margin: auto;
 
 }

@@ -11,39 +11,39 @@
             <div class="error">{{error}}</div>
             <div class="contain-delete">
             	<div class="contain-menu">
-                    <a class="delete" href="/welcome">Main list</a>
+                    <a class="delete" href="/welcome">Main</a>
                 </div>
-                <form method="post" action="/focus?title={{title}}">
+                <form method="post" action="/focus?postId={{postId}}">
                     <input style="border-radius: 0px" class="like" type="submit" name="like" value="Likes  {{count}}">
                 </form>
                 <div class="contain-menu">
-                    <a class="delete" href="/delete?title={{title}}">Delete</a>
+                    <a class="delete" href="/delete?postId={{postId}}">Delete</a>
+                </div>
+                <div class="contain-menu">
+                    <a class="delete" href="/editpost?postId={{postId}}">Edit</a>
                 </div>
             </div>
             <div class="contain-body">
-                <div class="field"><a href="/edit/title?title={{title}}">+ Title:</a>
-                    <br>
-                    <input style="text-align: left" class="answer" readonly name="title" value="{{title}}">
-                </div>
-                <!--     /edit/title?title={{title}}   -->
+                <div class="field">Title:
+                    <br><span class="answer">  {{title}}</span></div>
                 <div class="field">Created:
                     <br><span class="answer">  {{created}}</span></div>
                 <div class="field">Last mod:
                     <br><span class="answer">  {{last_mod}}</span></div>
                 <div class="field">Author:
                     <br><span class="answer">  {{author}}</span></div>
-                <div class="field"><a href="/edit/body?title={{title}}">+ Content</a>
+                <div class="field">Content:  
                     <br><span class="answer">{{body}}</span></div>
             </div>
             <br>
             <br>
-            <div class="contain-body comment-box"><a href="/comment?title={{title}}">+ Comments:<a/>
+            <div class="contain-body comment-box"><a href="/comment?postId={{postId}}">+ Comments:<a/>
 				<ul>
 					{% for x in comments %}
 					<li>
 					<div class="comment1"><i>{{ x.author }}</i> commented on {{ x.created }}:</div>
 					<br>
-					<a href="/edit/comment?commentId={{ x.key() }}&title={{title}}" class="edit-comment">edit</a>
+					<a href="/editcomment?commentId={{x.key().id()}}&postId={{postId}}" class="edit-comment">edit</a>
 					<div class="comment2">{{ x.comment }}</div>
 					<br>
 					<br>

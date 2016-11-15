@@ -15,14 +15,13 @@
 				</form>
 				<br>
 				<div class="cancel">
-					<a style="color: white; text-decoration: none" href="/focus?title={{title}}">Cancel</a>
+				<a style="color: white; text-decoration: none" href="/focus?postId={{postId}}">Cancel</a>
 				</div>
 				<div class="contain-body">
-					<div class="field">
-						<a href="/edit/title?title={{title}}">+ Title:</a>
+					<div class="field">Title:
 						<br>
-						<input style="text-align: left" class="answer" readonly name="title" value="{{title}}">
-						</div>
+						<span class="answer">  {{title}}</span>
+					</div>
 					<div class="error">{{error}}</div>
 					<div class="field">Created:
 						<br>
@@ -36,8 +35,8 @@
 						<br>
 						<span class="answer">  {{author}}</span>
 					</div>
-					<div class="field">
-						<a href="/edit/body?title={{title}}">+ Content</a>
+					<div class="field">Content:
+						
 						<br>
 						<span class="answer">{{body}}</span>
 					</div>
@@ -46,7 +45,7 @@
 				<br>
 				<br>
 				<div class="contain-body">
-					<a href="/comment?title={{title}}">+ Comments:<a/>
+					<div>Comments:<div/>
 						<ul>
 							{% for x in comments %}
 							<li>

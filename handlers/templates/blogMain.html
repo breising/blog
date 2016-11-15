@@ -26,7 +26,7 @@
             <div class="list10-contain">
                 <ul>
                     {% for x in posts %}
-                    <li><a href="/focus?title={{ x.title }}">
+                    <li><a href="/focus?postId={{ x.key().id() }}">
 						{{ x.title }}
 						</a></li>
                     {% endfor %}

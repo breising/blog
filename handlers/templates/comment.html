@@ -7,7 +7,7 @@
 	<body>
 		<div class="contain-main">
 			<div class="title">Add Comment</div>
-			<form method="post">
+			<form method="post" action="/comment?postId={{postId}}">
 			<legend>Title</legend>
 				<input readonly type="text" name="title" value="{{title}}">
 				<br>
@@ -23,7 +23,7 @@
 				<input type="submit">
 			</form>
 			<div class="cancel">
-				<a style="color: white; text-decoration: none" href="/focus?title={{title}}">Cancel</a>
+				<a style="color: white; text-decoration: none" href="/focus?postId={{postId}}">Cancel</a>
 			</div>
 		</div>
 	</body>
