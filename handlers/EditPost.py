@@ -21,12 +21,12 @@ class EditPost(BlogHandler):
 			body = q.body
 			created = q.created
 			last_mod = q.last_mod
-			author = q.author
+			author = q.author_id
 
 			k = q.key()
 			comments = Comments.all().ancestor(k)
 
-			if author == u.userName:
+			if user_id == author:
 				self.render("edit-post.html", body=body, title=title, postId = postId)
 			else:
 				error = "You must be author to edit."
@@ -43,24 +43,51 @@ class EditPost(BlogHandler):
 		postId = self.request.get("postId")
 
 		if user_id:
-			title = self.request.get("title")
-		  	body = self.request.get("body")
-		  	postId = self.request.get("postId")
+			u = Users.get_by_id(int(user_id))
+			q = BlogEntry.get_by_id(int(postId))
 
-		  	# if field is left empty
-		  	if title == "":
-		  		error = "You must enter a new title."
-		  		self.redirect("/editpost?postId=%s&error=%s" % (postId,error))
-		  	if body == "":
-		  		error = "You must enter new content."
-		  		self.redirect("/editpost?postId=%s&error=%s" % (postId,error))
-		  	else:
-			  	q = BlogEntry.get_by_id(int(postId))
+			title = q.title
+			body = q.body
+			created = q.created
+			last_mod = q.last_mod
+			author = q.author_id
 
-				q.title = title
-				q.body = body
+			k = q.key()
+			comments = Comments.all().ancestor(k)
 
-			 	q.put()
+			if user_id == author:
+				title = self.request.get("title")
+			  	body = self.request.get("body")
+			  	postId = self.request.get("postId")
 
-			  	error = "Updated post."
+			  	# if field is left empty
+			  	if title == "":
+			  		error = "You must enter a new title."
+			  		self.redirect("/editpost?postId=%s&error=%s" % (postId,error))
+			  	if body == "":
+			  		error = "You must enter new content."
+			  		self.redirect("/editpost?postId=%s&error=%s" % (postId,error))
+			  	else:
+				  	q = BlogEntry.get_by_id(int(postId))
+
+					q.title = title
+					q.body = body
+
+				 	q.put()
+
+				  	error = "Updated post."
+					self.redirect("/focus?postId=%s&error=%s" % (postId,error))
+			else:
+				error = "You must be author to edit."
 				self.redirect("/focus?postId=%s&error=%s" % (postId,error))
+		else:
+			error = "Please signup and login to edit posts."
+			self.redirect("/focus?postId=%s&error=%s" % (postId,error))
+
+
+
+
+
+
+
+			

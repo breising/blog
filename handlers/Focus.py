@@ -8,6 +8,8 @@ class Focus(BlogHandler):
 		# # AUTHENTICATE check for valid cookie
 		user_id = None
 		user_id = auth(self.request.cookies.get('user_id'))
+		u = Users.get_by_id(int(user_id))
+		user_name = u.userName
 
 		if user_id:
 
@@ -21,36 +23,44 @@ class Focus(BlogHandler):
 			body = q.body
 			created = q.created
 			last_mod = q.last_mod
-			author = q.author
+			author_id = q.author_id
+			auth
 
 			k = q.key()
 			comments = Comments.all().ancestor(k)
 
-			#count likes in the database for display, all relevant likes are ancestors of the blog post with title
+			# count likes in the database for display, all relevant likes are\
+			# ancestors of the blog post with title
 			likes = Likes.all().ancestor(k)
 			count = 0
 
 			for like in likes:
 				try:
-					if like.user_key:
+					if like.user_id:
 						count += 1
 				except:
 					pass
 
-			logging.warning(count)
 			# self.redirect("/edit/title")
-			self.render("focus.html", postId = postId, title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, error=error, count = count)
+			self.render("focus.html", postId = postId, title=title,\
+			body=body, created = created, last_mod = last_mod,\
+			author = user_name, comments = comments, error=error, count = count, user_name=user_name)
 		else:
 			self.redirct("/login")
 
 	def post(self):
-		def render_focus(title, body, created, last_mod, author, comments, count, error, postId):
-			self.render("focus.html", title=title, body=body, created = created, last_mod = last_mod, author = author, comments = comments, count = count, error=error, postId=postId)
+		def render_focus(title, body, created, last_mod, author, comments, count, error, postId, user_name):
+			self.render("focus.html", title=title, body=body,\
+			created = created, last_mod = last_mod, author = author,\
+			comments = comments, count = count, error=error, postId=postId,\
+			 user_name=user_name)
 
 		postId = self.request.get("postId")
 		user_id = None
 		# AUTHENTICATE check for valid cookie
 		user_id = auth(self.request.cookies.get('user_id'))
+		u = Users.get_by_id(int(user_id))
+		user_name = u.userName
 
 		if user_id:
 			# query for the usual blogPost entity properties
@@ -66,22 +76,27 @@ class Focus(BlogHandler):
 			k = q.key()
 
 			# check if user has already liked this post
-			# all Likes have a user_key property which corresponds to the User who LIKED the post, so query Likes filtered by user_key to get ALL the likes for this user
-			z = Likes.all().filter("user_key =", user_id)
+			# all Likes have a user_id property which corresponds to the 
+			# User who LIKED the post, so query Likes filtered by user_id
+			# to get ALL the likes for this user
+			z = Likes.all().filter("user_id =", user_id)
 
-			# then get the ONE (if theres is one) that is an ancestor of the blog post
+			# then get the ONE (if theres is one) that is an ancestor
+			# of the blog post
 			alreadyLiked = z.ancestor(k).get()
 
 			# set flag default 
 			flag = "go"
-			# if there are ZERO likes in the db, you'll get an error bc the query gets nothing. To prevent the error, use try/except
+			# if there are ZERO likes in the db, you'll get an error bc 
+			# the query gets nothing. To prevent the error, use try/except
 			try:
-				if alreadyLiked.user_key:
+				if alreadyLiked.user_id:
 					flag = "nogo"
 			except:
 				pass
 
-			# get all comments for for the blogpost - that means get all comments who are ancestors of K (the blogpost).
+			# get all comments for for the blogpost - that means get 
+			# all comments who are ancestors of K (the blogpost).
 			comments = Comments.all().ancestor(k)
 
 			count = 0
@@ -95,13 +110,14 @@ class Focus(BlogHandler):
 
 				for like in likes:
 					try:
-						if like.user_key:
+						if like.user_id:
 							count += 1
 							pass
 					except: pass
 						
 				error = "You can't like your own posts."
-				render_focus(title, body, created, last_mod, author, comments, count, error, postId)
+				render_focus(title, body, created, last_mod, author,\
+					comments, count, error, postId, user_name)
 			else:
 				# if the logged in user has already liked this post then...
 				if flag == "nogo":
@@ -111,34 +127,36 @@ class Focus(BlogHandler):
 
 					for like in likes:
 						try:
-							if like.user_key:
+							if like.user_id:
 								count += 1
 								pass
 						except: pass
 					#repaint page
-					render_focus(title, body, created, last_mod, author, comments, count, error, postId)
+					render_focus(title, body, created, last_mod, author, comments, count, error, postId, user_name)
 				else:
 					# if tests are passed....record the LIKE; 
 					# record the userIDKEY in LIKES as a CHILD of the BLOGPOST
 					#increment the like so it updates the display (not the db)
-					# record like in the db - user_key is the only property and it's ancestor is the blogpost k.
-					l = Likes(parent = k, user_key = user_id)
+					# record like in the db - user_id is the only property and it's ancestor is the blogpost k.
+					l = Likes(parent = k, user_id = user_id)
 					l.put()
 					error = "The Like was recorded."
-					# count ALL the existing LIKES to update display on VIEW post
-					# filter by ancestor bc ALL likes are recorded as an ancestor of ONE blogPost
+					# count ALL the existing LIKES to update display \
+					# on VIEW post
+					# filter by ancestor bc ALL likes are recorded as an \
+					# ancestor of ONE blogPost
 					likes = Likes.all().ancestor(k)
 					count = 0
 
 					for like in likes:
 						try:
-							if like.user_key:
+							if like.user_id:
 								count += 1
 								pass
 						except: pass
 						
 					#repaint page
-					render_focus(title, body, created, last_mod, author, comments, count, error, postId)
+					render_focus(title, body, created, last_mod, author, comments, count, error, postId, user_name)
 
 		else:
 			error = "Please signup and login to like a post."

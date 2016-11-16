@@ -1,36 +1,22 @@
-<!--   template  -->
-<!DOCTYPE html>
-<hmtl>
-	<head>
-	<title>Blog</title>
-	</head>
-	<body>
-	<!--   template  -->
-<!DOCTYPE html>
-<hmtl>
-	<head>
-	<title>Edit blog post</title>
-	</head>
-	<body>
-		<div class="contain-main">
-			<div class="title">Edit comment</div>
-			<form class="edit-form" method="post">
-				<input readonly style="color: white; background: white" name="commentId" value="{{commentId}}">
-				<legend>Comment:</legend>
-				<input style="text-align: center; color: black" class="textarea1" type="textarea" name="comment" value="{{comment}}"" >
-				<br>
-				<br>
-				<br>
-				<div style="color: red">{{error}}</div>
-				<input type="submit" value="submit">
-			</form>
-			<br>
-			<div class="cancel">
-				<a style="color: white; text-decoration: none" href="/focus?postId={{postId}}">Cancel</a>
-			</div>
-		</div>
+{% extends "base.html" %}
+{% block content %}
+<div class="contain-main">
+	<div class="title">Edit comment</div>
+	<form class="edit-form" method="post">
+		<input readonly style="color: white; background: white" name="commentId" value="{{commentId}}">
+		<legend>Comment:</legend>
+		<textarea style="text-align: center; color: black" class="textarea" type="textarea" name="comment">{{comment}}</textarea>
 		<br>
 		<br>
-	</body>
-	<link type="text/css" rel="stylesheet" href="/static/main.css">
-	</body>
+		<br>
+		<div style="color: red">{{error}}</div>
+		<input type="submit" value="submit">
+	</form>
+	<br>
+	<div class="cancel">
+		<a style="color: white; text-decoration: none" href="/focus?postId={{postId}}">Cancel</a>
+	</div>
+</div>
+<br>
+<br>
+{% endblock %}

@@ -1,37 +1,18 @@
-<!--   template  -->
-<!DOCTYPE html>
-<hmtl>
-
-    <head>
-        <title>Blog</title>
-    </head>
-    <style>
-    a:visited {
-        color: blue;
-    }
-    </style>
-
-    <body>
-        <div class="contain-main">
-            <div class="title">Multi-user Blog </div>
-            <br>
-            <div class="answer">Welcome back: {{user_id}}</div>
-            <br>
-            <form method="post" action="/logout">
-                <input type=submit value="logout">
-            </form>
-            <br>
-            <div class="error">{{error}}</div>
-            <a href="/newpost" class="newPost">+ Add post</a>
-            <div class="list10-contain">
-                <ul>
-                    {% for x in posts %}
-                    <li><a href="/focus?postId={{ x.key().id() }}">
-						{{ x.title }}
-						</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    </body>
-    <link type="text/css" rel="stylesheet" href="/static/main.css" />
+{% extends "base.html" %}
+{% block content %}
+<form method="post" action="/logout">
+    <input type=submit value="logout">
+</form>
+<br>
+<div class="error">{{error}}</div>
+<a href="/newpost?user_name={{user_name}}" class="newPost">+ Add post</a>
+<div class="list10-contain">
+    <ul>
+        {% for x in posts %}
+        <li><a href="/focus?postId={{ x.key().id() }}&user_name={{user_name}}">
+			{{ x.title }}
+			</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

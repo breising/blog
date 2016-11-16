@@ -5,13 +5,13 @@ import logging
 
 class Comment(BlogHandler):
 	def get(self):
-		user_key = None
+		user_id = None
 		# AUTHENTICATE check for valid cookie
-		user_key = auth(self.request.cookies.get('user_key'))
+		user_id = auth(self.request.cookies.get('user_id'))
 
 		postId = self.request.get("postId")
 
-		if user_key:
+		if user_id:
 
 			q = BlogEntry.get_by_id(int(postId))
 			title = q.title
@@ -24,10 +24,12 @@ class Comment(BlogHandler):
 			self.redirect("/focus?postId=%s&error=%s" % (postId,error))
 
 	def post(self):
-		#AUTHENTICATE
+		# AUTHENTICATE
 		user_id = None
 		# AUTHENTICATE check for valid cookie
 		user_id = auth(self.request.cookies.get('user_id'))
+		u = Users.get_by_id(int(user_id))
+		user_name = u.userName
 
 		if user_id:
 			comment = None
@@ -35,24 +37,23 @@ class Comment(BlogHandler):
 			postId= self.request.get("postId")
 			
 			q = BlogEntry.get_by_id(int(postId))
-			u = Users.get_by_id(int(user_id))
 
 			if comment:
 				if comment != "":
 					c = Comments(parent = q, comment=comment,\
-						author = user_id)
+						author_id = user_id, author_name=user_name)
 					c.put()
 
 					error = "Comment saved."
-					self.redirect("/focus?postId=%s&error=%s" % (postId,error))
+					self.redirect("/focus?postId=%s&error=%s&user_name=%s" % (postId,error,user_name))
 				else:
 					error = "Please add content for the comment or cancel."
-					self.redirect("/comment?postId=%s&error=%s" % (postId,error))
+					self.redirect("/comment?postId=%s&error=%s&user_name=%s" % (postId,error,user_name))
 			else:
 				error = "Please add a comment."
 				# must include all the parameters below to preserve user entered data
-				self.redirect("/comment?postId=%s&error=%s" % (postId,error))
+				self.redirect("/comment?postId=%s&error=%s&user_name=%s" % (postId,error,user_name))
 	  	else:
 	  		error = "Please signup and login to add a comment."
-	  		self.redirect("/focus?postId=%s&error=%s" % (postId,error))
+	  		self.redirect("/focus?postId=%s&error=%s&user_name=%s" % (postId,error,user_name))
 		

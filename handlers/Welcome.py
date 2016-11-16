@@ -12,20 +12,21 @@ class Welcome(BlogHandler):
 			# # AUTHENTICATE check for valid cookie
 			user_id = auth(self.request.cookies.get('user_id'))
 
+			try:
+				u = Users.get_by_id(int(user_id))
+			except:
+				pass
+
 			if not user_id:
 				error = "Please log in."
 				self.redirect("/login?error=%s" % error)
 			# if the cookie is authentic, then also check username against the db
 			else:
-				# query db for the userName to check whether user has been manually removed from db.
-				u = Users.get_by_id(int(user_id))
-				logging.warning(u)
-
 				# if user_id is also in the db, then authenticated
 				if u:
-					userName = u.userName
+					user_name = u.userName
 					# show the main page with list of blog posts
-					self.render("blogMain.html", user_id = userName, posts = posts)	
+					self.render("blogMain.html", user_name=user_name, posts = posts)	
 				else:
 					# if user is NOT in the db
 					error = "Username not in the database."

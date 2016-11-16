@@ -1,49 +1,39 @@
-<!DOCTYPE html>
-<hmtl>
-
-    <head>
-        <title>Blog</title>
-    </head>
-
-    <body>
-        <div class="contain-main">
-            <div class="title">The Bike Blog</div>
-            <div class="answer">Welcome {{user_id}}</div>
-            <div class="login-contain">
-            	<div class="error">{{error}}</div>
-            	<form class="signup-form" action="/signup">
-                    <br>
-                    <br>
-                    <input type="submit" name="sign-up" value="sign-up">
-                </form>
-                <form class="login-form" name="login" method="post">
-                    <br>
-                    <div class="gray">or login</div>
-                    <br>
-                    <legend>Username</legend>
-                    <input type="text" name="username">
-                    <br>
-                    <br>
-                    <legend>Password</legend>
-                    <input type="password" name="password">
-                    <br>
-                    <br>
-                    <br>
-                    <input type="submit" name="login" value="login">
-                </form>
-                <br>
-                <br>
-                <div class="list10-contain">
-                    <ul>
-                        {% for x in posts %}
-                        <li><a href="/focus?title={{ x.title }}">
-						{{ x.title }}
-						</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
+{% extends "base.html" %}
+{% block content %}
+<div class="contain-main">
+    <div class="login-contain">
+    	<div class="error">{{error}}</div>
+    	<form class="signup-form" action="/signup">
+            <br>
+            <br>
+            <input type="submit" name="sign-up" value="sign-up">
+        </form>
+        <form class="login-form" name="login" method="post">
+            <br>
+            <div class="gray">or login</div>
+            <br>
+            <legend>Username</legend>
+            <input type="text" name="username">
+            <br>
+            <br>
+            <legend>Password</legend>
+            <input type="password" name="password">
+            <br>
+            <br>
+            <br>
+            <input type="submit" name="login" value="login">
+        </form>
+        <br>
+        <br>
+        <div class="list10-contain">
+            <ul>
+                {% for x in posts %}
+                <li><a href="/focus?title={{ x.title }}">
+				{{ x.title }}
+				</a></li>
+                {% endfor %}
+            </ul>
         </div>
-    </body>
-    <link type="text/css" rel="stylesheet" href="/static/main.css" />
-</hmtl>
+    </div>
+</div>
+{% endblock %}

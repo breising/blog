@@ -1,30 +1,24 @@
-<!--   template  -->
-<!DOCTYPE html>
-<hmtl>
-	<head>
-	<title>Blog</title>
-	</head>
-	<body>
-		<div class="contain-main">
-			<div class="title">Add Comment</div>
-			<form method="post" action="/comment?postId={{postId}}">
-			<legend>Title</legend>
-				<input readonly type="text" name="title" value="{{title}}">
-				<br>
-				<br>
-				<legend>Body</legend>
-				<textarea readonly class="textarea1" type="textarea" name="body" wrap="hard">{{body}}</textarea>
-				<br>
-				<br>
-				<legend>Comment</legend>
-				<textarea type="textarea" class="textarea1" name="comment" wrap="hard"></textarea>
-				<br>
-				<br>
-				<input type="submit">
-			</form>
-			<div class="cancel">
-				<a style="color: white; text-decoration: none" href="/focus?postId={{postId}}">Cancel</a>
-			</div>
-		</div>
-	</body>
-	<link type="text/css" rel="stylesheet" href="/static/main.css">
+{% extends "base.html" %}
+{% block content %}
+<div class="contain-main">
+	<div class="title">Add Comment</div>
+	<form method="post" action="/comment?postId={{postId}}">
+	<legend>Title</legend>
+		<input readonly type="text" name="title" value="{{title}}">
+		<br>
+		<br>
+		<legend>Body</legend>
+		<textarea readonly class="textarea1" type="textarea" name="body" wrap="hard">{{body}}</textarea>
+		<br>
+		<br>
+		<legend>Comment</legend>
+		<textarea type="textarea" class="textarea1" name="comment" wrap="hard"></textarea>
+		<br>
+		<br>
+		<input type="submit">
+	</form>
+	<div class="cancel">
+		<a style="color: white; text-decoration: none" href="/focus?postId={{postId}}">Cancel</a>
+	</div>
+</div>
+{% endblock %}

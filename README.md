@@ -10,9 +10,9 @@ The program can be run locally using gcloud local environment.
 From the command line at the root of the project dir: "dev_appserver.py .""  to run the local server on port 8080. 
 Your datastore emulated db will store data locally and you can access the db console at port 8000.
 
-To delpoy the app to the cloud: "gcloud app deploy --project NAME-ID"
+To delpoy the app to the cloud: "gcloud app deploy --project blog-147716"
 then you can access the site via: "gcloud app browse" or just goto
-https://APPNAMW-ID.appspot.com/
+https://blog-147716.appspot.com/
 
 ### Site functions:
 

@@ -8,7 +8,7 @@ input {
 	border-style: solid;
 	border-color: white;
 	width: 300px;
-	height: 30px;
+	height: 36px;
 	font-size: 16px;
 	background: hsl(210,100%,50%);
 	color: white;
@@ -37,7 +37,7 @@ a {
 	border-color: white;
 	width: 300px;
 	height: 25px;
-	font-size: 18px;
+	font-size: 16px;
 	background: hsl(210,100%,50%);
 	color: white;
 	text-align: center;
@@ -155,9 +155,7 @@ input .answer {
 	font-size: 16px;
 }
 
-.input1 {
-	width: 230px;
-}
+
 
 .welcome {
 	font-size: 16px;
@@ -169,13 +167,9 @@ input .answer {
 	margin: auto;
 }
 
-
-
-
 .main-contain {
 	margin: 30px;
 }
-
 
 .username,
 .password,

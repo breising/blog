@@ -33,14 +33,35 @@ class DeletePost(BlogHandler):
 			self.redirect("/focus?postId=%s&error=%s" % (postId,error))
 
 	def post(self):
-			user_id = None
-			# AUTHENTICATE check for valid cookie
-			user_id = auth(self.request.cookies.get('user_id'))
-			postId = self.request.get("postId")
+		user_id = None
+		# AUTHENTICATE check for valid cookie
+		user_id = auth(self.request.cookies.get('user_id'))
 
+		postId = self.request.get("postId")
+		# must be logged in
+		if user_id:
 			q = BlogEntry.get_by_id(int(postId))
-			q.delete()
+			title = q.title
+			body = q.body
+			created = q.created
+			last_mod = q.last_mod
+			author = q.author_id
 
-			error = "Post deleted"
-			self.redirect("/welcome?error=%s" % error)
+		# ONLY AUTHOR CAN EDIT: check that user_id matches the AUTHOR
+			if author == user_id:
+				q = BlogEntry.get_by_id(int(postId))
+				q.delete()
+
+				error = "Post deleted"
+				self.redirect("/welcome?error=%s" % error)
+			else:
+				error = "Only the author can delete."
+				self.redirect("/focus?postId=%s&error=%s" % (postId,error))
+
+		else:
+			error = "Please signup and login to edit posts."
+			self.redirect("/focus?postId=%s&error=%s" % (postId,error))
+
+
+			
 		

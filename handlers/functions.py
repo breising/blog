@@ -66,3 +66,4 @@ def auth(user_id_cookie_hashed):
 		return None
 	else:
 		return user_id
+
