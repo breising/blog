@@ -30,6 +30,27 @@ a {
 	text-decoration: none;
 
 }
+
+.ed-contain {
+	display: flex;
+}
+.ed-but {
+	color: white;
+
+}
+.edit-delete {
+	border-radius: 5px;
+	border-style: solid;
+	border-color: white;
+	width: 80px;
+	height: 15px;
+	font-size: 14px;
+	background: hsl(210,100%,50%);
+	color: white;
+	text-align: center;
+	
+}
+
 .cancel {
 	text-decoration: none;
 	border-radius: 6px;

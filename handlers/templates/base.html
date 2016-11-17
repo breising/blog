@@ -1,16 +1,16 @@
-<!--   template  -->
 <!DOCTYPE html>
 <hmtl>
+
     <head>
         <title>Blog</title>
     </head>
+
     <body>
         <div class="contain-main">
             <div class="title">Multi-user Blog </div>
             <br>
             <div class="answer">Welcome {{user_name}}</div>
-            <br>
-            {% block content %}
+            <br> {% block content %}
             <form method="post" action="/logout">
                 <input type=submit value="logout">
             </form>
@@ -22,9 +22,9 @@
                     {% for x in posts %}
                     <li>
                         <a href="/focus?postId={{ x.key().id() }}">
-						{{ x.title }}
+                        {{ x.title }}
                         </a>
-                        </li>
+                    </li>
                     {% endfor %}
                 </ul>
             </div>

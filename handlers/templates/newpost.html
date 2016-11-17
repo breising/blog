@@ -1,5 +1,4 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="contain-main">
     <div class="title">Add blog post</div>
     <br>
@@ -9,11 +8,11 @@
         <form method="post">
             <br>
             <legend>Title/summary</legend>
-            <input type="text" name="title" value="{{title}}" " class="input1 ">
+            <input type="text" name="title" value="{{title}}" class="input1 ">
 			<br>
 			<br>
 			<legend>Body</legend>
-			<textarea type="text" name="body" class="textarea1">{{body}}</textarea>
+			<textarea type="text" name="body" class="textarea1 ">{{body}}</textarea>
 			<br>
 			<input type="submit" value="submit" class="AddBlogButton">
 		</form>

@@ -1,16 +1,15 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="contain-main">
-	<div class="title">Edit post</div>
-	<form class="edit-form" method="post">
-		<legend>Title</legend>
-		<input style="text-align: center" type="text" name="title" value="{{title}}"">
+    <div class="title">Edit post</div>
+    <form class="edit-form" method="post">
+        <legend>Title</legend>
+        <input style="text-align: center" type="text" name="title" value="{{title}}">
 		<br>
 		<legend>Content</legend>
 		<textarea style="text-align: center" type="text" name="body">{{body}}</textarea>
 		<br>
 		<br>
-		<div style="color: red">{{error}}</div>
+		<div style="color: red ">{{error}}</div>
 		<input type="submit">
 	</form>
 	<div class="cancel">

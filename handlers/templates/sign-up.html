@@ -1,32 +1,30 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="signup-contain">
-	<div class="title">Sign-up</div>
-	<br>
-	<br>
-	
-	<div class="login-contain">
-	<div class=error>{{error}}</div>
- 	<form method="post">
-	 	<legend>Username</legend>
-		<input type="text" name="userName">
-		<br>
-		<br>
-		<legend>Password</legend>
-		<input type="password" name="password">
-		<br>
-		<br>
-		<legend>Verify password</legend>
-		<div style="color: red" class=error>{{error2}}</div>
-		<input type="password" name="passwordV">
-		<br>
-		<br>
-		<legend>Email</legend>
-		<input type="text" name="userEmail">
-		<br>
-		<br>
-		<input type="submit" value="Submit">
-	 </form>
-	 </div>
+    <div class="title">Sign-up</div>
+    <br>
+    <br>
+    <div class="login-contain">
+        <div class=error>{{error}}</div>
+        <form method="post">
+            <legend>Username</legend>
+            <input type="text" name="userName">
+            <br>
+            <br>
+            <legend>Password</legend>
+            <input type="password" name="password">
+            <br>
+            <br>
+            <legend>Verify password</legend>
+            <div style="color: red" class=error>{{error2}}</div>
+            <input type="password" name="passwordV">
+            <br>
+            <br>
+            <legend>Email</legend>
+            <input type="text" name="userEmail">
+            <br>
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
 </div>
 {% endblock %}

@@ -1,10 +1,10 @@
 {% extends "base.html" %} {% block content %}
 <div class="contain-main">
     <div class="focus-contain">
-        <div class="title">Delete post</div>
+        <div class="title">Delete comment</div>
         <br>
-        <form method="post">
-            <input type="submit" value="delete now" class="delete-post">
+        <form method="post" action="/deletecomment?commentId={{commentId}}&postId={{postId}}">
+            <input type="submit" value="delete comment" class="delete-post">
         </form>
         <br>
         <div class="cancel">
@@ -37,18 +37,17 @@
         <br>
         <br>
         <div class="contain-body">
-            <div>Comments:
+            <div>Comment:
                 <div/>
-                <ul>
-                    {% for x in comments %}
-                    <li>
-                        <div class="comment1"><i>{{ x.author }}</i> commented on {{ x.created }}:</div>
-                        <br>
-                        <div class="comment2">{{ x.comment }}</div>
-                        <br>
-                        <br>
-                    </li>
-                    {% endfor %}
-                </ul>
+                <br>
+                <div>Author:
+                    <div class="answer"> {{cauthor_name}}</div>
+                </div>
+                <div>Created:
+                    <div class="answer"> {{ccreated}}</div>
+                </div>
+                <div>Content:
+                    <div class="answer"> {{cbody}}</div>
+                </div>
             </div>
             {% endblock %}

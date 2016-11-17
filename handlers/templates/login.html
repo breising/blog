@@ -1,9 +1,8 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="contain-main">
     <div class="login-contain">
-    	<div class="error">{{error}}</div>
-    	<form class="signup-form" action="/signup">
+        <div class="error">{{error}}</div>
+        <form class="signup-form" action="/signup">
             <br>
             <br>
             <input type="submit" name="sign-up" value="sign-up">
@@ -29,8 +28,8 @@
             <ul>
                 {% for x in posts %}
                 <li><a href="/focus?title={{ x.title }}">
-				{{ x.title }}
-				</a></li>
+                {{ x.title }}
+                </a></li>
                 {% endfor %}
             </ul>
         </div>
