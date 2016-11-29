@@ -111,7 +111,7 @@ class Focus(BlogHandler):
         if user_id:
 
             try:
-            u = Users.get_by_id(int(user_id))
+                u = Users.get_by_id(int(user_id))
             except:
                 pass
             if u:

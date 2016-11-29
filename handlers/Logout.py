@@ -10,8 +10,8 @@ class Logout(BlogHandler):
 	Logout handles post request from main/welcome page...
 	Deletes the users cookie to log them out.
 	'''
-    def post(self):
-        self.response.headers.add_header(
-            "Set-Cookie", "user_id=deleted; Expires=Thu, 01-Jan-1970 00:00:00 GMT")
-        error = "You are now logged out."
-        self.redirect("/welcome")
+	def post(self):
+		self.response.headers.add_header(
+			"Set-Cookie", "user_id=deleted; Expires=Thu, 01-Jan-1970 00:00:00 GMT")
+		error = "You are now logged out."
+		self.redirect("/welcome")

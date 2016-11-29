@@ -34,7 +34,6 @@ class DeleteComment(BlogHandler):
         try:
             u2 = Users.get_by_id(int(author_id))
             c = Comments.get_by_id(int(commentId), parent=k)
-            u = Users.get_by_id(int(cauthor_id))
         except:
             pass
         if u2:
@@ -44,6 +43,7 @@ class DeleteComment(BlogHandler):
             cbody = c.comment
             cauthor_id = c.author_id
         if c:
+            u = Users.get_by_id(int(cauthor_id))
             if u:
                 cauthor = u.userName
 
@@ -75,7 +75,7 @@ class DeleteComment(BlogHandler):
         # must be logged in
         if user_id:
             try:
-            comEntity = Comments.get_by_id(int(commentId), parent=k)
+                comEntity = Comments.get_by_id(int(commentId), parent=k)
             except:
                 pass
         if comEntity:

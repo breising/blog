@@ -24,7 +24,9 @@ def make_secure_val(s):
     '''
     return "%s|%s" % (s, hash_str(s))
 
-
+def render_str(self, template, **params):
+    return render_str(template, **params)
+    
 def check_secure_val(hashPlus):
     '''
     takes a cookies string, splits on the pipe, checks authenticity of the
