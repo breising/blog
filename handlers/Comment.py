@@ -7,12 +7,15 @@ import logging
 
 
 class Comment(BlogHandler):
+    '''
+    Comment handler: get funx renders the comment.html page if the user is auth and the post funx saves the input field data to the db is user is auth.
+    '''
 
     def get(self):
         user_id = None
         # AUTHENTICATE check for valid cookie
         user_id = auth(self.request.cookies.get('user_id'))
-
+        # get the blog post id from the get request
         postId = self.request.get("postId")
 
         if user_id:

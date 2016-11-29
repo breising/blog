@@ -11,18 +11,25 @@ import logging
 from threading import Timer
 from google.appengine.ext import db
 from models import BlogEntry, Comments, Likes, Users
-import logging
-
 
 def hash_str(s):
+    '''
+    takes a string and makes a hash
+    '''
     return hmac.new(make_secret(), s).hexdigest()
 
-
 def make_secure_val(s):
+    '''
+    takes a string and a hash and combines them to make a cookie string
+    '''
     return "%s|%s" % (s, hash_str(s))
 
 
 def check_secure_val(hashPlus):
+    '''
+    takes a cookies string, splits on the pipe, checks authenticity of the
+    hash, return password value or false
+    '''
     if hashPlus:
         val = hashPlus.split('|')[0]
         if hashPlus == make_secure_val(val):
@@ -30,13 +37,17 @@ def check_secure_val(hashPlus):
         else:
             return False
 
-
 def make_bcrypt_hash(password):
+    '''
+    checks the authenticity of the submitted password against a hash
+    '''
     return bcrypt.hashpw(password, bcrypt.gensalt(2))
 
 
 def validate_bcrypt(submittedPass, hash):
-    # get the salt value from the hash (it's the value after the comma)
+    '''
+     get the salt value from the hash (it's the value after the comma)
+    '''
     hashed2 = bcrypt.hashpw(submittedPass, hash)
     if hashed2 == hash:
         return True
@@ -52,11 +63,6 @@ def make_cookie_hash(numberV):
     return "%s,%s" % (h, salt)
 
 
-def render_str(template, **params):
-    t = jinja_env.get_template(template)
-    return t.render(params)
-
-
 def set_secure_cookie(self, name, val):
     cookie_val = make_secure_val(val)
     self.response.headers.add_header(
@@ -69,8 +75,10 @@ def login(self, user):
 
 
 def auth(user_id_cookie_hashed):
-    # AUTHENTICATE
-    # if user is authenticated then go...
+    '''
+    AUTHENTICATE
+    if user is authenticated then go...
+    '''
     user_id = check_secure_val(user_id_cookie_hashed)
 
     return None if not user_id else user_id

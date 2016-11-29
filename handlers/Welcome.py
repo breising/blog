@@ -6,30 +6,47 @@ from functions import hash_str, make_secure_val, check_secure_val, \
 import logging
 
 class Welcome(BlogHandler):
+    '''
+    Welcome handler renders the main page of the blog site after a user is\
+    authenticated.
+    '''
 
     def get(self):
+        user_id = None
+        u = None
+        error = ""
+        post = ""
         # GET ALL BLOG POSTS TO LIST THEM
-        posts = BlogEntry.all().order('-created')
-
-        # # AUTHENTICATE check for valid cookie
-        user_id = auth(self.request.cookies.get('user_id'))
-
         try:
-            u = Users.get_by_id(int(user_id))
+            posts = BlogEntry.all().order('-created')
         except:
             pass
 
-        if not user_id:
-            error = "Please log in."
-            self.redirect("/login?error=%s" % error)
-        # if the cookie is authentic, then also check username against the db
-        else:
-            # if user_id is also in the db, then authenticated
+        # AUTHENTICATE: check for valid cookie
+        user_id = auth(self.request.cookies.get('user_id'))
+
+        if user_id:
+            try:
+                # check db to verify that the username exists even though \
+                # browser has a cookie. Maybe this user was deleted from the\
+                # db by the admin.
+                u = Users.get_by_id(int(user_id))
+            except:
+                pass
             if u:
                 user_name = u.userName
-                # show the main page with list of blog posts
-                self.render("blogMain.html", user_name=user_name, posts=posts)
+
+                try:
+                    error = self.request.get("error")
+                except:
+                    pass
+                self.render("blogMain.html", user_name=user_name, posts=posts, error=error)
             else:
                 # if user is NOT in the db
-                error = "Username not in the database."
+                error = "Could not verify username."
                 self.redirect("/login?error=%s" % error)
+        else:
+            error = "Please log in."
+            self.redirect("/login?error=%s" % error)
+
+            

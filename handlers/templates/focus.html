@@ -30,26 +30,34 @@
     </div>
     <br>
     <br>
-    <div class="contain-body comment-box"><a href="/comment?postId={{postId}}">+ Comments:<a/>
+    <div class="contain-body comment-box">
+        <a href="/comment?postId={{postId}}">+ Comments:<a/>
         <ul>
-            {% for x in comments %}
-            <li>
-            <div class="comment1"><i>{{ x.author_name }}</i> commented on {{ x.created }}:</div>
-            <br>
-            <div class="comment2">{{ x.comment }}</div>
-            <br>
-            <div class="ed-contain">
-                <div class="edit-delete">
-                    <a class="ed-but" href="/editcomment?commentId={{x.key().id()}}&postId={{postId}}" class="edit-comment">edit</a>
+            {% if not comments %}
+                {{commentError}}
+            {% endif %}
+            {% if comments %}
+                {% for x in comments %}
+                    <li>
+                        <div class="comment1">
+                        {{ x.created }}:
+                        </div>
+                        <br>
+                        <div class="comment2">{{ x.comment }}</div>
+                        <br>
+                        <div class="ed-contain">
+                            <div class="edit-delete">
+                                <a class="ed-but" href="/editcomment?commentId={{x.key().id()}}&postId={{postId}}" class="edit-comment">edit</a>
+                            </div>
+                            <div class="edit-delete">
+                                <a class="ed-but" href="/deletecomment?commentId={{x.key().id()}}&postId={{postId}}" class="edit-comment">delete</a>
+                            </div>
+                        </div>
+                        <br>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
     </div>
-    <div class="edit-delete">
-        <a class="ed-but" href="/deletecomment?commentId={{x.key().id()}}&postId={{postId}}" class="edit-comment">delete</a>
-    </div>
-</div>
-<br>
-</li>
-{% endfor %}
-</ul>
-</div>
 </div>
 {% endblock %}

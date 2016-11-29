@@ -7,6 +7,10 @@ import logging
 
 
 class Signup(BlogHandler):
+    '''
+    Handler for the signup.html page get and post requests. Post takes the\
+    signup data, verifies it, then saves the user info.
+    '''
 
     def get(self):
         self.render("sign-up.html")
@@ -34,10 +38,12 @@ class Signup(BlogHandler):
                             userName=userName,
                             userPasswordHash=userPasswordHash,
                             userEmail=userEmail)
-                        s.put()
+                        if s:
+                            s.put()
 
                         self.redirect("/welcome")
-                    # if q yes, means that userName is NOT unique so,
+
+                    # the username is already taken
                     else:
                         error = "Please choose a different username."
                         self.render("sign-up.html", error=error)

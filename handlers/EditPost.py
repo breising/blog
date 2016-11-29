@@ -8,6 +8,9 @@ import logging
 
 
 class EditPost(BlogHandler):
+    '''
+    EditPost handler: get request renders the edit-post.html page if the user is the author....Post request processes input from the edits and saves new info to the db.
+    '''
 
     def get(self):
         user_id = None
@@ -17,19 +20,23 @@ class EditPost(BlogHandler):
         postId = self.request.get("postId")
 
         if user_id:
-            u = Users.get_by_id(int(user_id))
-
-            q = BlogEntry.get_by_id(int(postId))
-
-            title = q.title
-            body = q.body
-            created = q.created
-            last_mod = q.last_mod
-            author = q.author_id
-
-            k = q.key()
-            comments = Comments.all().ancestor(k)
-
+            try:
+                u = Users.get_by_id(int(user_id))
+                q = BlogEntry.get_by_id(int(postId))
+            except:
+                pass
+            if q:
+                title = q.title
+                body = q.body
+                created = q.created
+                last_mod = q.last_mod
+                author = q.author_id
+                k = q.key()
+            try:
+                comments = Comments.all().ancestor(k)
+            except:
+                pass
+            # if user is the author then ok to edit
             if user_id == author:
                 self.render(
                     "edit-post.html", body=body, title=title, postId=postId)
@@ -48,18 +55,24 @@ class EditPost(BlogHandler):
         postId = self.request.get("postId")
 
         if user_id:
-            u = Users.get_by_id(int(user_id))
-            q = BlogEntry.get_by_id(int(postId))
+            try:
+                u = Users.get_by_id(int(user_id))
+                q = BlogEntry.get_by_id(int(postId))
+            except:
+                pass
+            if q:
+                title = q.title
+                body = q.body
+                created = q.created
+                last_mod = q.last_mod
+                author = q.author_id
+                k = q.key()
 
-            title = q.title
-            body = q.body
-            created = q.created
-            last_mod = q.last_mod
-            author = q.author_id
-
-            k = q.key()
-            comments = Comments.all().ancestor(k)
-
+            try:
+                comments = Comments.all().ancestor(k)
+            except:
+                pass
+            # check again if user is the author..
             if user_id == author:
                 title = self.request.get("title")
                 body = self.request.get("body")
@@ -75,15 +88,17 @@ class EditPost(BlogHandler):
                     self.redirect(
                         "/editpost?postId=%s&error=%s" % (postId, error))
                 else:
-                    q = BlogEntry.get_by_id(int(postId))
+                    if q:
+                        q.title = title
+                        q.body = body
+                        q.put()
 
-                    q.title = title
-                    q.body = body
-
-                    q.put()
-
-                    error = "Updated post."
-                    self.redirect("/focus?postId=%s&error=%s" %
+                        error = "Updated post."
+                        self.redirect("/focus?postId=%s&error=%s" %
+                                  (postId, error))
+                    else:
+                        error = "error updating post"
+                        self.redirect("/focus?postId=%s&error=%s" %
                                   (postId, error))
             else:
                 error = "You must be author to edit."

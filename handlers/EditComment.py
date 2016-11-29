@@ -6,6 +6,9 @@ from models import BlogEntry, Comments, Likes, Users
 
 
 class EditComment(BlogHandler):
+    '''
+    EditComments handler: renders the edit-comment.html page if the user is the author. Post function takes input from edit fields and saves to the db
+    '''
 
     def get(self):
         commentId = None
@@ -26,15 +29,21 @@ class EditComment(BlogHandler):
             if user_id == comment.author_id:
 
                 c = Comments.get_by_id(commentId, parent=k)
-                comment = c.comment
-                created = c.created
-                author_id = c.author_id
+                if c:
+                    comment = c.comment
+                    created = c.created
+                    author_id = c.author_id
 
-                u = Users.get_by_id(int(author_id))
-                user_name = u.userName
+                    u = Users.get_by_id(int(author_id))
+                    user_name = u.userName
 
-                self.render("edit-comment.html", author=user_name, comment=comment,
-                            created=created, commentId=commentId, postId=postId)
+                    self.render("edit-comment.html", author=user_name, 
+                        comment=comment,created=created, commentId=commentId,
+                        postId=postId)
+                else:
+                    error="error"
+                    self.redirect("/focus?postId=%s&error=%s" 
+                        % (postId, error))
             else:
                 error = "You must be the author to edit the comment."
                 self.redirect("/focus?postId=%s&error=%s" % (postId, error))
@@ -60,15 +69,15 @@ class EditComment(BlogHandler):
 
             if user_id == comEntity.author_id:
                 q = BlogEntry.get_by_id(int(postId))
-                k = q.key()
-
-                c = Comments.get_by_id(int(commentId), parent=k)
-
-                c.comment = comment
-                c.put()
-
-                error = ""
-                self.redirect("/focus?postId=%s&error=%s" % (postId, error))
+                if q:
+                    k = q.key()
+                    c = Comments.get_by_id(int(commentId), parent=k)
+                    if c:
+                        c.comment = comment
+                        c.put()
+                        error = ""
+                        self.redirect("/focus?postId=%s&error=%s" 
+                            % (postId, error))
             else:
                 error = "You must be the author to edit the comment."
                 self.redirect("/focus?postId=%s&error=%s" % (postId, error))

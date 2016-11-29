@@ -7,6 +7,10 @@ import logging
 
 
 class DeletePost(BlogHandler):
+    '''
+    DeletePost handler: get function renders the delete.html page and post funx
+    deletes the post if the user is the author.
+    '''
 
     def get(self):
         user_id = None

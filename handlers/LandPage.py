@@ -4,8 +4,6 @@ from functions import hash_str, make_secure_val, check_secure_val,\
 
 from handlers import BlogHandler
 from models import BlogEntry, Comments, Likes, Users
-import logging
-
 
 class LandPage(BlogHandler):
 
@@ -13,7 +11,7 @@ class LandPage(BlogHandler):
         user_id = None
         # AUTHENTICATE check for valid cookie
         user_id = auth(self.request.cookies.get('user_id'))
-
+        # above checks for the cookie, if there is not cookie then redirect to the login page else auto-login and show welcome
         if user_id:
             self.redirect("/welcome")
         else:

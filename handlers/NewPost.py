@@ -44,9 +44,7 @@ class NewPost(BlogHandler):
         if user_id:
             if title and body:
                 u = Users.get_by_id(int(user_id))
-
-                b = BlogEntry(title=title, body=body, author=u.userName,
-                              likes=like, author_id=user_id)
+                b = BlogEntry(title=title, body=body, author_name=u.userName,likes=like, author_id=user_id)
                 b.put()
 
                 self.redirect("/welcome")

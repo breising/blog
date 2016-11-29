@@ -6,10 +6,14 @@ from functions import hash_str, make_secure_val, check_secure_val,\
     set_secure_cookie, login, auth
 import functions
 from threading import Timer
-import logging
 
 
 class Login(BlogHandler):
+    '''
+    Login handles get and post requests for the login.html page.
+    Post request accept the users login info and authenticates the user and
+    sets a cookie and redirects to /welcome
+    '''
 
     def get(self):
         # GET ALL BLOG POSTS TO LIST THEM
@@ -25,16 +29,20 @@ class Login(BlogHandler):
         # get name and password from the request
         name = self.request.get("username")
         submittedPassword = self.request.get("password")
-        # query the Users db by the userName, if not there, throw error
-        u = Users.all().filter('userName =', name).get()
-        # u = the entity object
+
+        # query the Users db by the userName provided, if not there, throw error
+        try:
+            u = Users.all().filter('userName =', name).get()
+        except:
+            pass
+        # u = the entity object, if it's None then there are no user names that match
         if u:
-            user_id = u.key().id()
-            # get the hashed password from the u object
-            dbHashedPassword = u.userPasswordHash
-            if dbHashedPassword:
-                # authenticate the hash password
-                if validate_bcrypt(submittedPassword, dbHashedPassword):
+            # get the hashed password from the db
+            if u.userPasswordHash:
+                # authenticate the hashed password
+                if validate_bcrypt(submittedPassword, u.userPasswordHash):
+                    # get the entity id from the u entity
+                    user_id = u.key().id()
                     # make a new user-key hash to create a login cookie for
                     # this user for the next time they return
                     str_user_id = str(user_id)
@@ -47,6 +55,9 @@ class Login(BlogHandler):
                 else:
                     error = "Login failed. Password is incorrect."
                     self.render("login.html", error=error)
+            else:
+                error = "Login failed. Cannot access database for password."
+                self.render("login.html", error=error)
         else:
-            error = "Login failed. Username is incorrect."
+            error = "Login failed. Username not verified."
             self.render("login.html", error=error)

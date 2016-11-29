@@ -7,6 +7,7 @@ class BlogEntry(db.Model):
     body = db.TextProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
     last_mod = db.DateTimeProperty(auto_now=True)
-    author = db.StringProperty(required=True)
-    author_id = db.StringProperty()
-    # author should be the userID of the logged in user.
+    author_name = db.StringProperty(required=True)
+    likes = db.IntegerProperty(required=True)
+    author_id = db.StringProperty(required=True)
+ 

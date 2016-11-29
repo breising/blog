@@ -9,12 +9,17 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
 
 
 def render_str(template, **params):
+	'''
+	create the jinja templating environment
+	'''
     t = jinja_env.get_template(template)
     return t.render(params)
 
 
 class BlogHandler(webapp2.RequestHandler):
-
+	'''
+	functions for rendering pages
+	'''
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
