@@ -39,8 +39,18 @@ class Signup(BlogHandler):
                             userPasswordHash=userPasswordHash,
                             userEmail=userEmail)
                         if s:
-                            s.put()
-
+                            user_key = s.put()
+                        # get the entity from the key
+                        user_id = user_key.id()
+                        # make a new user-key hash to create a login cookie for
+                        # this user for the next time they return
+                        str_user_id = str(user_id)
+                        userKeyHash_cookie_val = str(make_secure_val(str_user_id))
+                        # set the cookie
+                        self.response.headers.add_header(
+                            'Set-Cookie', 'user_id=%s' 
+                            % userKeyHash_cookie_val)
+                        # with the new cookie set, /welcome will do the auto login
                         self.redirect("/welcome")
 
                     # the username is already taken
